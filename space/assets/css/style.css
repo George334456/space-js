@@ -1,0 +1,66 @@
+/*canvas page styles*/
+html {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+body {
+
+	margin: 0;
+	border: 0;
+	width:100%;
+	height:100%;
+	background-color: #000;
+	color: #fff;
+	text-align: center;
+	
+	
+}
+
+main {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	
+	
+}
+
+div {
+	position: absolute;
+	text-align: center;
+	border: 2px solid #fff;
+	margin: 0;
+	padding: 0;
+	left: 25%;
+	top: 25%;
+	width: 50%;
+	z-index: 100;
+}
+
+div span {
+	display: inline-block;
+	margin: 1em 2em;
+	width: 40%;
+	background-color: transparent;
+	color: white;
+	font-size: 14pt; 
+	padding: 1em 1em;
+}
+
+div button {
+	display: inline-block;
+	width: 40%;
+	border: 2px solid purple;
+	background-color: transparent;
+	color: white;
+	font-size: 14pt; 
+	padding: 1em 1em;
+	margin: 1em 1em;
+}
+
+div button:hover {
+	background-color: purple;
+}
