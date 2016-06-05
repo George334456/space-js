@@ -7,6 +7,17 @@ function startGame() {
 }
 
 function loadTitle(){
+
+	var transition_menu = document.getElementById("end-level");
+	transition_menu.parentNode.removeChild(transition_menu);
+
+
+	loadLevel(0, 0); // second parameter should be taken from html storage, we will fix later
+
+	//not sure why you did this below, just easlity call my load level function like above
+
+	/*
+
 	var c = document.getElementById("space-canvas");
 	var ctx = c.getContext("2d");
 	ctx.font = "20px Times New Roman"
@@ -15,9 +26,11 @@ function loadTitle(){
 	ctx.fillText("Space Jam", 400,250);
 	ctx.fillText("High Score", 390, 270);
 	ctx.fillText("Start", 420,290)
+
+	*/
 }
 
-/*Loads a level transition menu infront of the canvas*/
+/*Loads a level transition menu or title screen in front of the canvas*/
 function loadLevel(level, score) {
 	high_score = 0;
 	var main = document.getElementById("container");
@@ -36,10 +49,10 @@ function loadLevel(level, score) {
 	}
 	else if (level == 1) {
 		button_str = "Next";
-		onclick_str = "startGame()" // placeholder for when we create this function
+		onclick_str = "startGame()"
 	} else {
 		button_str = "Finish";
-		onclick_str = "loadTitle()" // placeholder for title screen loader
+		onclick_str = "loadTitle()" 
 	}
 
 	var button = "<button onclick=\"" + onclick_str + "\">" + button_str + "</button>";
@@ -53,4 +66,4 @@ function loadLevel(level, score) {
 
 //used for testing
 //window.onload = startPage();
-window.onload = loadLevel(0, 200);
+window.onload = loadLevel(2, 200);
