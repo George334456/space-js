@@ -64,3 +64,8 @@ div button {
 div button:hover {
 	background-color: purple;
 }
+
+rect.btn {
+	fill-opacity: 0;
+	stroke-opacity:0;
+}

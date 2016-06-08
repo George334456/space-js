@@ -1,9 +1,53 @@
-
+var black_holes = [];
 function startGame() {
 	var transition_menu = document.getElementById("end-level");
 	transition_menu.parentNode.removeChild(transition_menu);
 
+	var main = document.getElementById("container");
+	var draw = document.getElementById("drawing");
+
+
+	// var black = "<g> <circle cx=\"50\" cy=\"50\" r=\"25\" fill =\"red\" " +
+	// 	"stroke=\"blue\" stroke-width = \"1\"/> <rect class=\"btn\" x=\"25\" y=\"25\" width=\"50\" height=\"50\" onclick=\"alert('click!')\" /> </g> ";
+	var black = "<circle cx=\"50\" cy=\"50\" r=\"25\" fill =\"red\" " +
+		"stroke=\"blue\" stroke-width = \"1\"/>";
+	var blue = "<svg width = \"1000\" height = \"640\"> <circle cx=\"500\" cy=\"500\" r=\"25\" fill =\"blue\" " +
+		"stroke=\"blue\" stroke-width = \"1\"/> </svg>";
+	var purple = "<svg width = \"1000\" height = \"640\"> <circle cx=\"350\" cy=\"350\" r=\"25\" fill =\"purple\" " +
+		"stroke=\"blue\" stroke-width = \"1\"/> </svg>";
+	for (var i = 0; i < 3; i++){
+		var x= Math.floor(850*Math.random()) + 50;//50 <= x <= 900
+		var y = Math.floor(Math.random()*450)+90;//90 <= y <= 540; because of the top bar, we have to move our y down.
+		var color = Math.floor(2*Math.random()); //0 = purple, 1 = blue, 2 = black
+		draw.innerHTML = draw.innerHTML + makeBlackHole(color,x,y);
+	}
+	//draw.innerHTML = black + draw.innerHTML;
+	//every 4 seconds level 1, change to every 2 seconds level 2.
+	//info bar 40 px tall.
 	// will add another function here when we start creating the game
+}
+
+function makeBlackHole(color, x, y){
+	var returnString;
+	switch(color){
+		case 0://purple
+			returnString = "<g> <circle cx=\""+ x +"\" cy=\""+ y +"\" r=\"25\" fill =\"purple\" " +
+				"stroke=\"blue\" stroke-width = \"1\"/> <rect class=\"btn\" x=\""+x+"\" y=\""+y+"\" width=\"50\" " +
+				"height=\"50\" onclick=\"alert('click!')\" /> </g> ";
+			break;
+		case 1: //blue
+			returnString = "<g> <circle cx=\""+ x +"\" cy=\""+ y +"\" r=\"25\" fill =\"blue\" " +
+				"stroke=\"blue\" stroke-width = \"1\"/> <rect class=\"btn\" x=\""+x+"\" y=\""+y+"\" width=\"50\" " +
+				"height=\"50\" onclick=\"alert('click!')\" /> </g> ";
+			break;
+		case 2: //black
+			returnString = "<g> <circle cx=\""+ x +"\" cy=\""+ y +"\" r=\"25\" fill =\"red\" " +
+				"stroke=\"blue\" stroke-width = \"1\"/> <rect class=\"btn\" x=\""+x+"\" y=\""+y+"\" width=\"50\" " +
+				"height=\"50\" onclick=\"alert('click!')\" /> </g> ";
+			break;
+
+	}
+	return returnString;
 }
 
 function loadTitle(){
