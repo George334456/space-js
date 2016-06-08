@@ -36,7 +36,7 @@ function loadLevel(level, score) {
 	var main = document.getElementById("container");
 	var level_str = "<span>Level " + level + "</span>";
 	var score_str = "<span>Score: " + score + "</span>";
-	var title = "<span>Space Jam </span>";
+	var title = "<span id=\"title\">Space Jam </span>";
 	var high_score_str = "<span> High Score: " + high_score + "</span>";
 
 	//determine if it's last level 
@@ -66,4 +66,4 @@ function loadLevel(level, score) {
 
 //used for testing
 //window.onload = startPage();
-window.onload = loadLevel(2, 200);
+//window.onload = loadLevel(2, 200);
