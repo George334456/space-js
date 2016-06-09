@@ -1,33 +1,30 @@
 var black_holes = [];
+
+function black_hole(x,y, color){ //Constructor for the black hole object
+	/*
+	x is the center x-coordinate of the black hole
+	y is the center y-coordinate of the black hole
+	collide_x is the x-coordinate of the top left corner of the collision box
+	collide_y is the y-coordinate of the top left corner of the collision box
+	color is the color of the black hole.
+	 */
+	this.x = x;
+	this.y = y;
+	this.collide_x = x-50;
+	this.collide_y = y - 50;
+	this.color = color;
+};
+
 function startGame() {
 	var transition_menu = document.getElementById("end-level");
 	transition_menu.parentNode.removeChild(transition_menu);
 
-	var main = document.getElementById("container");
-	var draw = document.getElementById("drawing");
-
-	/*
-
-	// var black = "<g> <circle cx=\"50\" cy=\"50\" r=\"25\" fill =\"red\" " +
-	// 	"stroke=\"blue\" stroke-width = \"1\"/> <rect class=\"btn\" x=\"25\" y=\"25\" width=\"50\" height=\"50\" onclick=\"alert('click!')\" /> </g> ";
-	var black = "<circle cx=\"50\" cy=\"50\" r=\"25\" fill =\"red\" " +
-		"stroke=\"blue\" stroke-width = \"1\"/>";
-	var blue = "<svg width = \"1000\" height = \"640\"> <circle cx=\"500\" cy=\"500\" r=\"25\" fill =\"blue\" " +
-		"stroke=\"blue\" stroke-width = \"1\"/> </svg>";
-	var purple = "<svg width = \"1000\" height = \"640\"> <circle cx=\"350\" cy=\"350\" r=\"25\" fill =\"purple\" " +
-		"stroke=\"blue\" stroke-width = \"1\"/> </svg>";
 	for (var i = 0; i < 3; i++){
-		var x= Math.floor(850*Math.random()) + 50;//50 <= x <= 900
-		var y = Math.floor(Math.random()*450)+90;//90 <= y <= 540; because of the top bar, we have to move our y down.
-		var color = Math.floor(2*Math.random()); //0 = purple, 1 = blue, 2 = black
-		draw.innerHTML = draw.innerHTML + makeBlackHole(color,x,y);
+		var x= Math.floor(900*Math.random()) + 50;//50 <= x <= 900
+		var y = Math.floor(Math.random()*500)+90;//90 <= y <= 540; because of the top bar, we have to move our y down.
+		var color = Math.floor(3*Math.random()); //0 = purple, 1 = blue, 2 = black
+		makeBlackHole(color,x,y);
 	}
-	//draw.innerHTML = black + draw.innerHTML;
-	//every 4 seconds level 1, change to every 2 seconds level 2.
-	//info bar 40 px tall.
-	// will add another function here when we start creating the game
-
-	*/
 
 	var game = window.game;
 
@@ -36,26 +33,29 @@ function startGame() {
 }
 
 function makeBlackHole(color, x, y){
-	var returnString;
+	/*
+	x is center x-coordinate of the circle
+	y is center y-coordinate of the circle
+	color is the color to fill with
+	 */
+	//draw the blackhole
+	var canvas = document.getElementById("space-canvas");
+	var context = canvas.getContext("2d");
 	switch(color){
-		case 0://purple
-			returnString = "<g> <circle cx=\""+ x +"\" cy=\""+ y +"\" r=\"25\" fill =\"purple\" " +
-				"stroke=\"blue\" stroke-width = \"1\"/> <rect class=\"btn\" x=\""+x+"\" y=\""+y+"\" width=\"50\" " +
-				"height=\"50\" onclick=\"alert('click!')\" /> </g> ";
+		case 0: context.fillStyle = "purple";
 			break;
-		case 1: //blue
-			returnString = "<g> <circle cx=\""+ x +"\" cy=\""+ y +"\" r=\"25\" fill =\"blue\" " +
-				"stroke=\"blue\" stroke-width = \"1\"/> <rect class=\"btn\" x=\""+x+"\" y=\""+y+"\" width=\"50\" " +
-				"height=\"50\" onclick=\"alert('click!')\" /> </g> ";
+		case 1: context.fillStyle = "blue";
 			break;
-		case 2: //black
-			returnString = "<g> <circle cx=\""+ x +"\" cy=\""+ y +"\" r=\"25\" fill =\"red\" " +
-				"stroke=\"blue\" stroke-width = \"1\"/> <rect class=\"btn\" x=\""+x+"\" y=\""+y+"\" width=\"50\" " +
-				"height=\"50\" onclick=\"alert('click!')\" /> </g> ";
+		case 2: context.fillStyle = "red";
 			break;
-
 	}
-	return returnString;
+	context.beginPath();
+	context.arc(x,y, 25, 0, 2* Math.PI, false);
+	context.fill();
+	context.strokeStyle = "white";
+	context.stroke();
+	var hole = black_hole(x,y,context.fillStyle);
+	black_holes.push()
 }
 
 function loadTitle(){
