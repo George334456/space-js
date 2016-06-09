@@ -33,9 +33,12 @@ SpaceObject.prototype.updatePosition = function() {
 /*This method will update the objects directional speed if it hits canvas*/
 SpaceObject.prototype.Rebound = function() {
 	if (this.x_pos - (this.width/2) <= 0 || this.x_pos + (this.width/2) >= 1000) {
+
 		this.speed_x = this.speed_x * -1;
+		
 	}
-	if (this.y_pos - (this.height/2) <= 0 || this.y_pos + (this.height/2) >= 640) {
+
+	if (this.y_pos - (this.height/2) <= 42 || this.y_pos + (this.height/2) >= 640) {
 		this.speed_y = this.speed_y * -1;
 	}
 };
@@ -59,51 +62,3 @@ function satellite_draw() {
 	window.ctx.fillStyle = "green";
 	window.ctx.fillRect(this.x_pos-(this.width/2), this.y_pos-(this.height/2), this.width, this.height);
 }
-
-//testing
-function animate(array) {
-	var c = document.getElementById("space-canvas");
-	window.ctx.clearRect(0, 0, c.width, c.height);
-
-	var len = array.length;
-
-    for (i = 0; i < len; i++) {
-
-
-
-	    var s = array[i];
-
-	    s.Rebound();
-
-	    s.updatePosition();
-
-
-		// Always clear the canvas after drawing each frame
-	    
-	    
-	    
-	    s.draw();
-	    //d.draw();
-	}
-    
-    setTimeout(animate, 33, array);
-    
-} // window.onloa
-
-window.onload = function() {
-
-	var c = document.getElementById("space-canvas");
-    window.ctx = c.getContext("2d"); // Dealing with a global context is easier
-
-   	var s = new SpaceObject(50, 50, 0);
-   	var d = new SpaceObject(250, 400, 1);
-   	var o = new SpaceObject(500, 200, 3);
-
-   	array = [];
-   	array.push(s);
-   	array.push(d);
-   	array.push(o);
-
-
-	animate(array);
-};

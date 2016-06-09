@@ -6,6 +6,7 @@ function startGame() {
 	var main = document.getElementById("container");
 	var draw = document.getElementById("drawing");
 
+	/*
 
 	// var black = "<g> <circle cx=\"50\" cy=\"50\" r=\"25\" fill =\"red\" " +
 	// 	"stroke=\"blue\" stroke-width = \"1\"/> <rect class=\"btn\" x=\"25\" y=\"25\" width=\"50\" height=\"50\" onclick=\"alert('click!')\" /> </g> ";
@@ -25,6 +26,13 @@ function startGame() {
 	//every 4 seconds level 1, change to every 2 seconds level 2.
 	//info bar 40 px tall.
 	// will add another function here when we start creating the game
+
+	*/
+
+	var game = window.game;
+
+	game.startLevel();
+
 }
 
 function makeBlackHole(color, x, y){
@@ -53,7 +61,10 @@ function makeBlackHole(color, x, y){
 function loadTitle(){
 
 	var transition_menu = document.getElementById("end-level");
-	transition_menu.parentNode.removeChild(transition_menu);
+
+	if (transition_menu) {
+		transition_menu.parentNode.removeChild(transition_menu);
+	}
 
 
 	loadLevel(0, 0); // second parameter should be taken from html storage, we will fix later
@@ -90,6 +101,7 @@ function loadLevel(level, score) {
 	if (level == 0) {
 		button_str = "Start Game!"
 		onclick_str = "startGame()"
+		window.game = new GameManager();
 	}
 	else if (level == 1) {
 		button_str = "Next";
@@ -110,4 +122,4 @@ function loadLevel(level, score) {
 
 //used for testing
 //window.onload = startPage();
-//window.onload = loadLevel(2, 200);
+window.onload = loadTitle();
