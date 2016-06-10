@@ -1,8 +1,13 @@
+//TODO: Timed respawn
+
+var GameState;
+
 var GameManager = function() {
 	this.level = 0;
 	this.state = "start";
 	this.score = 200;
 	this.spaceObjectArray = [];
+	this.blackHoleArray = [];
 	this.time = undefined;
 	this.width = document.getElementById("space-canvas").width;
 	this.height = document.getElementById("space-canvas").height;
@@ -18,7 +23,8 @@ GameManager.prototype.startLevel = function() {
     window.ctx = c.getContext("2d"); // Dealing with a global context is easier
 
     this.spaceObjectArray = [];
-    array = this.spaceObjectArray;
+	this.blackHoleArray = [];
+	array = this.spaceObjectArray;
 
     this.level += 1;
     this.time = 60;
@@ -34,17 +40,48 @@ GameManager.prototype.startLevel = function() {
     });
 
     for (var i = 0; i < 10; i++) {
-  		
+
   		array.push(spawnSpaceObject());
 
 
   	}
 
+	var collide = false;
+	var i = 0;
+
+	//every 4 seconds level 1, change to every 2 seconds level 2.
+
+	/*
+	Creates 5 black holes which will not have their suck box intersect.
+	 */
+	while(i < 5){
+		var x= Math.floor(900*Math.random()) + 50;//50 <= x <= 900
+		var y = Math.floor(Math.random()*500)+90;//90 <= y <= 540; because of the top bar, we have to move our y down.
+		var color = Math.floor(3*Math.random()); //0 = purple, 1 = blue, 2 = black
+		var hole = new Black_Hole(x,y,color);
+		for (var j = 0; j < this.blackHoleArray.length; j++){
+			if (NoCollision(this.blackHoleArray[j], hole)){
+				collide = false;
+			}
+			else{
+				collide = true;
+				break;
+			}
+		}
+		if (collide){
+			continue;
+		}
+		i++;
+
+		this.blackHoleArray.push(hole);
+	}
+
   	// creates timer
   	this.timer_inter = setInterval(timer, 1000, this);
 
 	animate(this);
-	
+
+
 
 };
 
@@ -193,11 +230,16 @@ function animate(game) {
 	    	
 	    	s.updatePosition();
 	    	s.Rebound();
-	    } 
-	    
-	    	    
+	    }
+
 	    s.draw();
 
+
+	}
+
+	//loop through all the existing black holes and draw them.
+	for (i = 0 ; i < game.blackHoleArray.length; i++){
+		drawHole(game.blackHoleArray[i]);
 	}
 
 	if (game.state == "pause") {
@@ -213,6 +255,23 @@ function animate(game) {
     }
 }
 
+function NoCollision(ExistingHole, CreatedHole){
+	/*
+	 Returns if is no collision between the ExistingHole and the CreatedHole
+	 */
+	return (CreatedHole.collide_left > ExistingHole.collide_right)
+		|| (CreatedHole.collide_right < ExistingHole.collide_left)
+		|| (CreatedHole.collide_bottom < ExistingHole.collide_top)
+		|| (CreatedHole.collide_top > ExistingHole.collide_bottom);
+}
+
+function isClicked(hole, x, y){
+	/*
+	Determines if the hole is clicked with at mouse coordinate (x,y)
+	 */
+	return (x < hole.click_right) && (x > hole.click_left) && (y < hole.click_bottom) && (y > hole.click_top);
+}
+
 function timer(game) {
 
 	if (game.state == "start") {
@@ -220,3 +279,26 @@ function timer(game) {
 	}
 	
 }
+
+function clear (game, hole, i){
+	/*
+	Removes the object from the screen and pops it from the array at index i.
+	//TODO: Clear function
+	 */
+}
+//TODO: Jquery for finding the clicking function
+// $(document).ready(function(){
+// 	$('#space-canvas').click(function(e){
+// 		alert(this.game);
+// 		var clickedX = e.pageX - this.offsetLeft;
+// 		var clickedY = e.pageY - this.offsetTop;
+//
+// 		for (var i = 0; i < this.game.blackHoleArray.length; i++){
+// 			if (isClicked(this.game.blackHoleArray[i], clickedX, clickedY)){
+// 				alert("clicked " + i);
+// 				//clear(this.game.blackHoleArray[i]);
+// 			}
+// 		}
+// 	});
+// });
+
