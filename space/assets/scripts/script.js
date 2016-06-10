@@ -57,12 +57,14 @@ function startGame() {
 		i++;
 		drawBlackHole(hole);
 	}
-
 	//every 4 seconds level 1, change to every 2 seconds level 2.
 	//info bar 40 px tall.
 	//TODO: Click
 	//TODO: Timed respawn
 	//TODO: Don't spawn within same collision box
+	var game = window.game;
+
+	game.startLevel();
 }
 
 function drawBlackHole(hole){
@@ -95,7 +97,10 @@ function drawBlackHole(hole){
 function loadTitle(){
 
 	var transition_menu = document.getElementById("end-level");
-	transition_menu.parentNode.removeChild(transition_menu);
+
+	if (transition_menu) {
+		transition_menu.parentNode.removeChild(transition_menu);
+	}
 
 
 	loadLevel(0, 0); // second parameter should be taken from html storage, we will fix later
@@ -122,7 +127,7 @@ function loadLevel(level, score) {
 	var main = document.getElementById("container");
 	var level_str = "<span>Level " + level + "</span>";
 	var score_str = "<span>Score: " + score + "</span>";
-	var title = "<span>Space Jam </span>";
+	var title = "<span id=\"title\">Space Jam </span>";
 	var high_score_str = "<span> High Score: " + high_score + "</span>";
 
 	//determine if it's last level 
@@ -132,6 +137,7 @@ function loadLevel(level, score) {
 	if (level == 0) {
 		button_str = "Start Game!"
 		onclick_str = "startGame()"
+		window.game = new GameManager();
 	}
 	else if (level == 1) {
 		button_str = "Next";
@@ -152,4 +158,4 @@ function loadLevel(level, score) {
 
 //used for testing
 //window.onload = startPage();
-window.onload = loadLevel(2, 200);
+window.onload = loadTitle();
