@@ -1,6 +1,6 @@
 var black_holes = [];
 
-function black_hole(x,y, color){ //Constructor for the black hole object
+function Black_Hole(x,y, color){ //Constructor for the black hole object
 	/*
 	x is the center x-coordinate of the black hole
 	y is the center y-coordinate of the black hole
@@ -10,36 +10,68 @@ function black_hole(x,y, color){ //Constructor for the black hole object
 	 */
 	this.x = x;
 	this.y = y;
-	this.collide_x = x-50;
-	this.collide_y = y - 50;
+	this.click_top = y-25;
+	this.click_bottom = y + 25;
+	this.click_left = x-25;
+	this.click_right = x + 25;
+	this.collide_top = y-50;
+	this.collide_bottom = y + 50;
+	this.collide_left = x-50;
+	this.collide_right = x + 50;
 	this.color = color;
-};
+}
+
+function NoCollision(ExistingHole, CreatedHole){
+	/*
+	Returns if is no collision between the ExistingHole and the CreatedHole
+	 */
+	return (CreatedHole.collide_left > ExistingHole.collide_right)
+		|| (CreatedHole.collide_right < ExistingHole.collide_left)
+		|| (CreatedHole.collide_bottom < ExistingHole.collide_top)
+		|| (CreatedHole.collide_top > ExistingHole.collide_bottom);
+}
 
 function startGame() {
 	var transition_menu = document.getElementById("end-level");
 	transition_menu.parentNode.removeChild(transition_menu);
 
-	for (var i = 0; i < 3; i++){
+	var collide = false;
+	var i = 0;
+	while(i < 15){
 		var x= Math.floor(900*Math.random()) + 50;//50 <= x <= 900
 		var y = Math.floor(Math.random()*500)+90;//90 <= y <= 540; because of the top bar, we have to move our y down.
 		var color = Math.floor(3*Math.random()); //0 = purple, 1 = blue, 2 = black
-		makeBlackHole(color,x,y);
+		var hole = new Black_Hole(x,y,color);
+		for (var j = 0; j < black_holes.length; j++){
+			if (NoCollision(black_holes[j], hole)){
+				collide = false;
+			}
+			else{
+				collide = true;
+				break;
+			}
+		}
+		if (collide){
+			continue;
+		}
+		i++;
+		drawBlackHole(hole);
 	}
+
 	//every 4 seconds level 1, change to every 2 seconds level 2.
 	//info bar 40 px tall.
-	// will add another function here when we start creating the game
+	//TODO: Click
+	//TODO: Timed respawn
+	//TODO: Don't spawn within same collision box
 }
 
-function makeBlackHole(color, x, y){
+function drawBlackHole(hole){
 	/*
-	x is center x-coordinate of the circle
-	y is center y-coordinate of the circle
-	color is the color to fill with
+	Draw based on the hole object
 	 */
-	//draw the blackhole
 	var canvas = document.getElementById("space-canvas");
 	var context = canvas.getContext("2d");
-	switch(color){
+	switch(hole.color){
 		case 0: context.fillStyle = "purple";
 			break;
 		case 1: context.fillStyle = "blue";
@@ -48,12 +80,16 @@ function makeBlackHole(color, x, y){
 			break;
 	}
 	context.beginPath();
-	context.arc(x,y, 25, 0, 2* Math.PI, false);
+	context.arc(hole.x,hole.y, 25, 0, 2* Math.PI, false);
 	context.fill();
 	context.strokeStyle = "white";
 	context.stroke();
-	var hole = black_hole(x,y,context.fillStyle);
-	black_holes.push()
+	context.fillStyle="black";
+	context.beginPath();
+	context.strokeRect(hole.click_left, hole.click_top,  50, 50);
+	context.beginPath();
+	context.strokeRect(hole.collide_left, hole.collide_top, 100,100);
+	black_holes.push(hole);
 }
 
 function loadTitle(){
