@@ -11,11 +11,12 @@ var SpaceObject = function(x, y, type) {
 	this.direction = undefined // randomize slope 
 	this.types = [planet_draw, ship_draw, nebula_draw, satellite_draw];
 	this.draw = this.types[type];
+	this.pulled = false;
 
 	if (horizontal_dir == 1) {
-		this.speed_x = 2;
+		this.speed_x = 1;
 	} else {
-		this.speed_x = -2;
+		this.speed_x = -1;
 	}
 	
 	this.speed_y = Math.floor((Math.random() * 3) + 0); // placeholder for now
