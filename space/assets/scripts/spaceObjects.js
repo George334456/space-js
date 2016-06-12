@@ -44,13 +44,71 @@ SpaceObject.prototype.Rebound = function() {
 };
 
 function planet_draw() {
+	var ctx = window.ctx;
+
 	window.ctx.fillStyle = "pink";
 	window.ctx.fillRect(this.x_pos-(this.width/2), this.y_pos-(this.height/2), this.width, this.height);
+
+	ctx.fillStyle = "#0055ff";
+	ctx.beginPath();
+	ctx.strokeStyle = "#ffffff";
+	ctx.arc(this.x_pos, this.y_pos, this.width/2, 0, 2*Math.PI, false);
+	ctx.closePath();
+	ctx.fill();
+	ctx.stroke();
+
+
+	ctx.beginPath();
+	ctx.fillStyle = "#00ff55";
+	ctx.strokeStyle = "#000000";
+	ctx.moveTo(this.x_pos - 15, this.y_pos - 15);
+	ctx.quadraticCurveTo(this.x_pos - 10, this.y_pos - 25, this.x_pos + 5, this.y_pos - 10);
+	//ctx.quadraticCurveTo(this.x_pos + 3, this.y_pos - 25, this.x_pos, this.y_pos - 8);
+	ctx.closePath();
+	ctx.fill();
+	ctx.stroke();
+	
+
+
 }
 
 function ship_draw() {
-	window.ctx.fillStyle = "red";
-	window.ctx.fillRect(this.x_pos-(this.width/2), this.y_pos-(this.height/2), this.width, this.height);
+	var ctx = window.ctx;
+
+	//tail
+	ctx.fillStyle = "#ff0000";
+	ctx.strokeStyle = "#000000";
+	ctx.beginPath();
+	ctx.moveTo(this.x_pos+5, this.y_pos+5);
+	ctx.lineTo(this.x_pos+25, this.y_pos+10);
+	ctx.lineTo(this.x_pos+10, this.y_pos+25);
+	ctx.closePath();
+	ctx.fill();
+	ctx.stroke();
+
+	//ship body
+	ctx.fillStyle = "#dddddd";
+	ctx.strokeStyle = "#000000";
+	ctx.beginPath();
+	ctx.moveTo(this.x_pos-25, this.y_pos-25);
+	ctx.quadraticCurveTo(this.x_pos+10, this.y_pos-10, this.x_pos+25, this.y_pos+25);
+	ctx.quadraticCurveTo(this.x_pos-10, this.y_pos+10, this.x_pos-25, this.y_pos-25);
+	ctx.closePath();
+	ctx.fill();
+	ctx.stroke();
+
+	//window
+	ctx.fillStyle = "#00bbff";
+	ctx.strokeStyle = "#000000";
+	ctx.beginPath();
+	ctx.arc(this.x_pos-5, this.y_pos-5, 3, 0, 2*Math.PI, false);
+	ctx.closePath();
+	ctx.fill();
+	ctx.stroke();
+
+
+
+
 }
 
 function nebula_draw() {
