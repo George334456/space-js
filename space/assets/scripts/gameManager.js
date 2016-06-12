@@ -14,6 +14,7 @@ var GameManager = function() {
 	this.mouse_x = undefined;
 	this.mouse_y = undefined;
 	this.timer_inter = undefined;
+	this.space_inter = undefined;
 
 };
 
@@ -49,35 +50,16 @@ GameManager.prototype.startLevel = function() {
 	var collide = false;
 	var i = 0;
 
-	//every 4 seconds level 1, change to every 2 seconds level 2.
-
-	/*
-	Creates 5 black holes which will not have their suck box intersect.
-	 */
-	while(i < 5){
-		var x= Math.floor(900*Math.random()) + 50;//50 <= x <= 900
-		var y = Math.floor(Math.random()*500)+90;//90 <= y <= 540; because of the top bar, we have to move our y down.
-		var color = Math.floor(3*Math.random()); //0 = purple, 1 = blue, 2 = black
-		var hole = new Black_Hole(x,y,color);
-		for (var j = 0; j < this.blackHoleArray.length; j++){
-			if (NoCollision(this.blackHoleArray[j], hole)){
-				collide = false;
-			}
-			else{
-				collide = true;
-				break;
-			}
-		}
-		if (collide){
-			continue;
-		}
-		i++;
-
-		this.blackHoleArray.push(hole);
-	}
-
   	// creates timer
   	this.timer_inter = setInterval(timer, 1000, this);
+	if (this.level == 1) {
+		//Set the spawn rate to once every 4 seconds.
+		this.space_inter = setInterval(spawnBlackHole, 4000, game);
+	}
+	else if (this.level == 2){
+		//Set the spawn rate to once every 2 seconds.
+		this.space_inter = setInterval(spawnBlackHole, 2000, game);
+	}
 
 	animate(this);
 
@@ -204,6 +186,35 @@ function spawnSpaceObject() {
 	return new SpaceObject(x_pos, y_pos, type);
 }
 
+//Spawns a black hole and pushes it into the array if there does not exist a collision.
+function spawnBlackHole(game){
+	var collide = false;
+	if(game.state == "pause" || game.blackHoleArray.length >= 15){
+		//cap the number of black holes available to spawn to 15.
+		return;
+	}
+	while (true) {
+		//Checking for collision. If there doesn't exist one a collision, we push to the array.
+		var x = Math.floor(900 * Math.random()) + 50;//50 <= x <= 900
+		var y = Math.floor(Math.random() * 500) + 90;//90 <= y <= 540; because of the top bar, we have to move our y down.
+		var color = Math.floor(3 * Math.random()); //0 = purple, 1 = blue, 2 = black
+		var hole = new Black_Hole(x, y, color);
+		for (var j = 0; j < game.blackHoleArray.length; j++) {
+			if (NoCollision(game.blackHoleArray[j], hole)) {
+				collide = false;
+			}
+			else {
+				collide = true;
+				break;
+			}
+		}
+		if (collide){
+			continue;
+		}
+		game.blackHoleArray.push(hole);
+		return;
+	}
+}
 
 // private function used by the gameManager in order to draw frames
 function animate(game) {
@@ -223,11 +234,11 @@ function animate(game) {
 
 	    s = array[i];
 
-	    
+
 
 	    // move objects only if game state is in start
 	    if (game.state == "start") {
-	    	
+
 	    	s.updatePosition();
 	    	s.Rebound();
 	    }
@@ -248,6 +259,7 @@ function animate(game) {
     
 	if (game.time == 0) {
 		clearInterval(game.timer_inter);
+		clearInterval(game.space_inter);
 		window.ctx.clearRect(0, 0, c.width, c.height);
 		loadLevel(game.level, game.score);
 	} else {
