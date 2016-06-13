@@ -1,4 +1,3 @@
-//TODO: Timed respawn
 
 var GameState;
 
@@ -39,6 +38,10 @@ GameManager.prototype.startLevel = function() {
     c.addEventListener("click", function(event) {
     	checkPause(event, game, this);
     });
+
+	c.addEventListener("click",function(event){
+		checkHole(event, game, this);
+	});
 
     for (var i = 0; i < 10; i++) {
 
@@ -88,6 +91,20 @@ function checkPause(event, game, canvas) {
 		
 	}
 
+}
+
+function checkHole(event,game,canvas){
+	setMousePos(event, game, canvas);
+	if (game.blackHoleArray.length == undefined)
+	{
+		return;
+	}
+	for (var i = 0; i < game.blackHoleArray.length; i ++){
+		if (isClicked(game.blackHoleArray[i],game.mouse_x, game.mouse_y)){
+			clear(game, game.blackHoleArray[i]);
+			game.blackHoleArray.splice(i,1); //Remove at position i.
+		}
+	}
 }
 
 
