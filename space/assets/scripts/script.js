@@ -25,12 +25,36 @@ function loadTitle(){
 
 /*Loads a level transition menu or title screen in front of the canvas*/
 function loadLevel(level, score) {
-	high_score = 0;
+	var high_score = [];
+	if (typeof(Storage) !== "undefined") {
+		for (var i = 0; i < 3; i ++) {
+			var str = "highscore" + i;
+			high_score[i] = localStorage.getItem(str);
+		}
+	}
+	else{
+		for(var i = 0; i < 3; i++) {
+			high_score[i] = 0;
+		}
+	}
+
 	var main = document.getElementById("container");
 	var level_str = "<span>Level " + level + "</span>";
 	var score_str = "<span>Score: " + score + "</span>";
 	var title = "<span id=\"title\">Space Jam </span>";
-	var high_score_str = "<span> High Score: " + high_score + "</span>";
+	var high_score_str = "<span id = \"highscore\"> High Scores: ";
+	for (var i = 0; i < 3; i++){
+		if (high_score[i] === null || high_score[i] === 0)
+			high_score_str += "0";
+		else{
+			high_score_str += high_score[i];
+		}
+		if(i !== 2){
+			high_score_str += ", ";
+		}
+	}
+	high_score_str +="</span>"
+	//var high_score_str = "<span id = \"highscore\"> High Score: " + high_score + "</span>";
 
 	//determine if it's last level 
 
@@ -46,7 +70,7 @@ function loadLevel(level, score) {
 		onclick_str = "startGame()"
 	} else {
 		button_str = "Finish";
-		onclick_str = "loadTitle()" 
+		onclick_str = "loadTitle()"
 	}
 
 	var button = "<button onclick=\"" + onclick_str + "\">" + button_str + "</button>";

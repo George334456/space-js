@@ -37,11 +37,12 @@ GameManager.prototype.startLevel = function() {
 
     c.addEventListener("click", function(event) {
     	checkPause(event, game, this);
+		checkHole(event,game,this);
     });
-
-	c.addEventListener("click",function(event){
-		checkHole(event, game, this);
-	});
+    //
+	// c.addEventListener("click",function(event){
+	// 	checkHole(event, game, this);
+	// });
 
     for (var i = 0; i < 10; i++) {
 
@@ -65,9 +66,6 @@ GameManager.prototype.startLevel = function() {
 	}
 
 	animate(this);
-
-
-
 };
 
 // private function for event handler for moving mouse
@@ -99,9 +97,20 @@ function checkHole(event,game,canvas){
 	{
 		return;
 	}
-	for (var i = 0; i < game.blackHoleArray.length; i ++){
+	for (var i = 0; i < game.blackHoleArray.length; i++){
 		if (isClicked(game.blackHoleArray[i],game.mouse_x, game.mouse_y)){
-			clear(game, game.blackHoleArray[i]);
+			clearHole(game.blackHoleArray[i]);
+			switch(game.blackHoleArray[i].color){
+				case 0: //Colored purple.
+					game.score += 10;
+					break;
+				case 1: //Colored blue.
+					game.score += 5;
+					break;
+				case 2: //colored black/red at the moment.
+					game.score += 20;
+					break;
+			}
 			game.blackHoleArray.splice(i,1); //Remove at position i.
 		}
 	}
@@ -181,12 +190,12 @@ function createHUD(game) {
 	//level
 	ctx.font = "16px Arial";
 	ctx.fillStyle = "#ff00ff";
-	ctx.fillText("level: " + game.level, 50, 25);
+	ctx.fillText("Level: " + game.level, 50, 25);
 
 	//score
 	ctx.font = "16px Arial";
 	ctx.fillStyle = "#ff00ff";
-	ctx.fillText("level: " + game.score, 350, 25);
+	ctx.fillText("Score: " + game.score, 350, 25);
 
 	//timer
 	ctx.fillText("Timer: " + game.time, 700, 25);
@@ -205,30 +214,45 @@ function spawnSpaceObject() {
 
 //Spawns a black hole and pushes it into the array if there does not exist a collision.
 function spawnBlackHole(game){
+
+
 	var collide = false;
 	if(game.state == "pause" || game.blackHoleArray.length >= 15){
 		//cap the number of black holes available to spawn to 15.
 		return;
 	}
+	var color_selector = Math.floor(Math.random()*100);
+	var color;
+	if (color_selector < 50){
+		color = 1; //blue, common, 50%
+	}
+	else if (color_selector < 85){
+		color = 0; //purple, second rarest. 30%
+	}
+	else{
+		color = 2; // black, rarest. 20%
+	}
 	while (true) {
 		//Checking for collision. If there doesn't exist one a collision, we push to the array.
 		var x = Math.floor(900 * Math.random()) + 50;//50 <= x <= 900
 		var y = Math.floor(Math.random() * 500) + 90;//90 <= y <= 540; because of the top bar, we have to move our y down.
-		var color = Math.floor(3 * Math.random()); //0 = purple, 1 = blue, 2 = black
+		//var color = Math.floor(3 * Math.random()); //0 = purple, 1 = blue, 2 = black
 		var hole = new Black_Hole(x, y, color);
 		for (var j = 0; j < game.blackHoleArray.length; j++) {
 			if (NoCollision(game.blackHoleArray[j], hole)) {
 				collide = false;
+
 			}
 			else {
 				collide = true;
 				break;
 			}
 		}
-		if (collide){
+		if (collide) {
 			continue;
 		}
 		game.blackHoleArray.push(hole);
+		//console.log(hole.color);
 		return;
 	}
 }
@@ -279,6 +303,21 @@ function animate(game) {
 		clearInterval(game.timer_inter);
 		clearInterval(game.space_inter);
 		window.ctx.clearRect(0, 0, c.width, c.height);
+		if (game.level == 2){
+			for (var i = 0; i< 3; i++){
+				var str_high_score = "highscore" + i;
+				if (localStorage.getItem(str_high_score) === null){
+					localStorage.setItem(str_high_score, game.score);
+					break;
+				}
+				else{
+					if (game.score > parseInt(localStorage.getItem(str_high_score))){
+						localStorage.setItem(str_high_score,game.score);
+					}
+					continue;
+				}
+			}
+		}
 		loadLevel(game.level, game.score);
 	} else {
     	setTimeout(animate, 33, game);
@@ -310,25 +349,4 @@ function timer(game) {
 	
 }
 
-function clear (game, hole, i){
-	/*
-	Removes the object from the screen and pops it from the array at index i.
-	//TODO: Clear function
-	 */
-}
-//TODO: Jquery for finding the clicking function
-// $(document).ready(function(){
-// 	$('#space-canvas').click(function(e){
-// 		alert(this.game);
-// 		var clickedX = e.pageX - this.offsetLeft;
-// 		var clickedY = e.pageY - this.offsetTop;
-//
-// 		for (var i = 0; i < this.game.blackHoleArray.length; i++){
-// 			if (isClicked(this.game.blackHoleArray[i], clickedX, clickedY)){
-// 				alert("clicked " + i);
-// 				//clear(this.game.blackHoleArray[i]);
-// 			}
-// 		}
-// 	});
-// });
 

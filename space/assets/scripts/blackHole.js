@@ -81,7 +81,7 @@ function calculateSpeed(blackhole, spaceobject) {
 
    
 
-    console.log(spaceobject.speed_x, spaceobject.speed_y);
+    //console.log(spaceobject.speed_x, spaceobject.speed_y);
 }
 
 function drawHole(hole){
@@ -99,6 +99,22 @@ function drawHole(hole){
     window.ctx.arc(hole.x,hole.y, 25, 0, 2* Math.PI, false);
     window.ctx.fill();
     window.ctx.strokeStyle = "white";
+    window.ctx.stroke();
+    window.ctx.fillStyle="black";
+    window.ctx.beginPath();
+    window.ctx.strokeRect(hole.click_left, hole.click_top,  50, 50);
+    window.ctx.beginPath();
+    window.ctx.strokeRect(hole.collide_left, hole.collide_top, 100,100);
+}
+
+function clearHole(hole){
+    var canvas = document.getElementById("space-canvas");
+    var context = canvas.getContext("2d");
+    window.ctx.fillstyle = "black";
+    window.ctx.beginPath();
+    window.ctx.arc(hole.x,hole.y, 25, 0, 2* Math.PI, false);
+    window.ctx.fill();
+    window.ctx.strokeStyle = "black";
     window.ctx.stroke();
     window.ctx.fillStyle="black";
     window.ctx.beginPath();
