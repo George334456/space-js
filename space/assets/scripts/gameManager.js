@@ -251,6 +251,7 @@ function animate(game) {
 	//loop through all the existing black holes and draw them.
 	for (i = 0 ; i < game.blackHoleArray.length; i++){
 		drawHole(game.blackHoleArray[i]);
+		game.blackHoleArray[i].pull(game.spaceObjectArray, game);
 	}
 
 	if (game.state == "pause") {
