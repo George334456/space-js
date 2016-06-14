@@ -87,17 +87,25 @@ function calculateSpeed(blackhole, spaceobject) {
 function drawHole(hole){
     var canvas = document.getElementById("space-canvas");
     var context = canvas.getContext("2d");
+    var img = new Image();
+    img.onload = function() {
+        ctx.drawImage(img, hole.x, hole.y);
+    }
+
     switch(hole.color){
         case 0: window.ctx.fillStyle = "purple";
+            img.src = "/images/portalpurple.svg";
             break;
         case 1: window.ctx.fillStyle = "blue";
+            img.src = "/images/portalblue.svg";
             break;
         case 2: window.ctx.fillStyle = "red";
+            img.src = "/images/portalblack.svg";
             break;
     }
-    window.ctx.beginPath();
-    window.ctx.arc(hole.x,hole.y, 25, 0, 2* Math.PI, false);
-    window.ctx.fill();
+    // window.ctx.beginPath();
+    // window.ctx.arc(hole.x,hole.y, 25, 0, 2* Math.PI, false);
+    // window.ctx.fill();
     window.ctx.strokeStyle = "white";
     window.ctx.stroke();
     window.ctx.fillStyle="black";
