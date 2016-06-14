@@ -41,6 +41,9 @@ var Black_Hole = function (x,y, color){ //Constructor for the black hole object
     }
 }
 
+/*
+Pulls space objects into a black hole
+*/
 Black_Hole.prototype.pull = function(spaceobjects, game) {
     for (var i = 0; i < spaceobjects.length; i++) {
         var s = spaceobjects[i];
@@ -57,8 +60,8 @@ Black_Hole.prototype.pull = function(spaceobjects, game) {
             var g = game;
             var that = this;
             setTimeout(function() {
-
-                if (that.object_count == that.capacity) {
+                //In case multiple objects go into that hole at the same time overflows.
+                if (that.object_count >= that.capacity) {
                     var index = g.blackHoleArray.indexOf(that);
                     g.blackHoleArray.splice(index, 1);
                 }
@@ -88,11 +91,9 @@ function calculateSpeed(blackhole, spaceobject) {
     spaceobject.speed_x = Math.cos(angle) * blackhole.pull_speed;
     spaceobject.speed_y = Math.sin(angle) * blackhole.pull_speed;
 
-   
-
-    //console.log(spaceobject.speed_x, spaceobject.speed_y);
 }
 
+//draws the hole based on the image.
 function drawHole(hole){
     var canvas = document.getElementById("space-canvas");
     var context = canvas.getContext("2d");
@@ -100,30 +101,4 @@ function drawHole(hole){
         ctx.drawImage(hole.img, hole.x-25, hole.y-25);
     };
     ctx.drawImage(hole.img, hole.x-25, hole.y-25);
-    // window.ctx.beginPath();
-    // window.ctx.arc(hole.x,hole.y, 25, 0, 2* Math.PI, false);
-    // window.ctx.fill();
-    //window.ctx.strokeStyle = "white";
-    //window.ctx.stroke();
-    //window.ctx.fillStyle="black";
-    //window.ctx.beginPath();
-    //window.ctx.strokeRect(hole.click_left, hole.click_top,  50, 50);
-    //window.ctx.beginPath();
-    //window.ctx.strokeRect(hole.collide_left, hole.collide_top, 100,100);
-}
-
-function clearHole(hole){
-    var canvas = document.getElementById("space-canvas");
-    var context = canvas.getContext("2d");
-    window.ctx.fillStyle = "white";
-    window.ctx.beginPath();
-    window.ctx.arc(hole.x,hole.y, 25, 0, 2* Math.PI, false);
-    window.ctx.fill();
-    window.ctx.strokeStyle = "white";
-    window.ctx.stroke();
-    window.ctx.fillStyle="white";
-    window.ctx.beginPath();
-    window.ctx.strokeRect(hole.click_left, hole.click_top,  50, 50);
-    window.ctx.beginPath();
-    window.ctx.strokeRect(hole.collide_left, hole.collide_top, 100,100);
 }

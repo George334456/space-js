@@ -1,5 +1,6 @@
 
 function startGame() {
+	//Starts the game by creating an instance of the gameManager class.
 	var transition_menu = document.getElementById("end-level");
 	transition_menu.parentNode.removeChild(transition_menu);
 	
@@ -9,7 +10,7 @@ function startGame() {
 }
 
 function loadTitle(){
-
+	//Loads the title screen.
 	var transition_menu = document.getElementById("end-level");
 
 	if (transition_menu) {
@@ -17,9 +18,7 @@ function loadTitle(){
 	}
 
 
-	loadLevel(0, 0); // second parameter should be taken from html storage, we will fix later
-
-	//not sure why you did this below, just easlity call my load level function like above
+	loadLevel(0, 0);
 
 }
 
@@ -44,17 +43,20 @@ function loadLevel(level, score) {
 	var title = "<span id=\"title\">Space Jam </span>";
 	var high_score_str = "<span id = \"highscore\"> High Scores: ";
 	for (var i = 0; i < 3; i++){
-		if (high_score[i] === null || high_score[i] === 0)
+		if (high_score[0] === null){
 			high_score_str += "0";
+			break;
+		}
+		if (high_score[i] === null)
+			break;
 		else{
 			high_score_str += high_score[i];
 		}
-		if(i !== 2){
+		if(high_score[i+1] != null){
 			high_score_str += ", ";
 		}
 	}
 	high_score_str +="</span>"
-	//var high_score_str = "<span id = \"highscore\"> High Score: " + high_score + "</span>";
 
 	//determine if it's last level 
 
@@ -82,6 +84,5 @@ function loadLevel(level, score) {
 	}
 }
 
-//used for testing
-//window.onload = startPage();
+//When the game loads, load the title screen.
 window.onload = loadTitle();

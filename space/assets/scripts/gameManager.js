@@ -1,6 +1,6 @@
-
-var GameState;
-
+/*
+Game manager function.
+*/
 var GameManager = function() {
 	this.level = 0;
 	this.state = "start";
@@ -17,7 +17,11 @@ var GameManager = function() {
 
 };
 
+/*
+Starts the level by drawing and adding event listeners.
+*/
 GameManager.prototype.startLevel = function() {
+
 	
 	var c = document.getElementById("space-canvas");
     window.ctx = c.getContext("2d"); // Dealing with a global context is easier
@@ -27,7 +31,7 @@ GameManager.prototype.startLevel = function() {
 	array = this.spaceObjectArray;
 
     this.level += 1;
-    this.time = 60;
+    this.time = 60; //Total time
 
     var game = this;
 
@@ -39,11 +43,8 @@ GameManager.prototype.startLevel = function() {
     	checkPause(event, game, this);
 		checkHole(event,game,this);
     });
-    //
-	// c.addEventListener("click",function(event){
-	// 	checkHole(event, game, this);
-	// });
 
+    //Generates all the space objects.
     for (var i = 0; i < 10; i++) {
 
   		array.push(spawnSpaceObject());
@@ -57,14 +58,15 @@ GameManager.prototype.startLevel = function() {
   	// creates timer
   	this.timer_inter = setInterval(timer, 1000, this);
 	if (this.level == 1) {
-		//Set the spawn rate to once every 4 seconds.
+		//Set the spawn rate of black holes to once every 4 seconds.
 		this.space_inter = setInterval(spawnBlackHole, 4000, game);
 	}
 	else if (this.level == 2){
-		//Set the spawn rate to once every 2 seconds.
+		//Set the spawn rate of black holes to once every 2 seconds.
 		this.space_inter = setInterval(spawnBlackHole, 2000, game);
 	}
 
+	//Start the animation
 	animate(this);
 };
 
@@ -76,6 +78,7 @@ function setMousePos(event, game, canvas) {
     game.mouse_y = event.clientY - rect.top;
 }
 
+//Checks for if the pause button has been clicked.
 function checkPause(event, game, canvas) {
 	setMousePos(event, game, canvas);
 	if (650 >= game.mouse_x && game.mouse_x >= 600 && 30 >= game.mouse_y && game.mouse_y >= 10) {
@@ -91,6 +94,7 @@ function checkPause(event, game, canvas) {
 
 }
 
+//Checks to see if a black hole has been clicked.
 function checkHole(event,game,canvas){
 	setMousePos(event, game, canvas);
 	if (game.blackHoleArray.length == undefined)
@@ -99,7 +103,6 @@ function checkHole(event,game,canvas){
 	}
 	for (var i = 0; i < game.blackHoleArray.length; i++){
 		if (isClicked(game.blackHoleArray[i],game.mouse_x, game.mouse_y) && game.state=="start"){
-			clearHole(game.blackHoleArray[i]);
 			switch(game.blackHoleArray[i].color){
 				case 0: //Colored purple.
 					game.score += 10;
@@ -232,11 +235,11 @@ function spawnBlackHole(game){
 		color = 2; // black, rarest. 20%
 	}
 	while (true) {
-		//Checking for collision. If there doesn't exist one a collision, we push to the array.
+		//Checking for collision between exisiting black holes. If there doesn't exist one a collision, we push to the array.
 		var x = Math.floor(900 * Math.random()) + 50;//50 <= x <= 900
 		var y = Math.floor(Math.random() * 500) + 90;//90 <= y <= 540; because of the top bar, we have to move our y down.
-		//var color = Math.floor(3 * Math.random()); //0 = purple, 1 = blue, 2 = black
 		var hole = new Black_Hole(x, y, color);
+		
 		for (var j = 0; j < game.blackHoleArray.length; j++) {
 			if (NoCollision(game.blackHoleArray[j], hole)) {
 				collide = false;
@@ -251,7 +254,6 @@ function spawnBlackHole(game){
 			continue;
 		}
 		game.blackHoleArray.push(hole);
-		//console.log(hole.color);
 		return;
 	}
 }
@@ -298,20 +300,30 @@ function animate(game) {
 		pauseOverlay();
 	}
     
-	if (game.time == 0) {
+    //Exit conditions are game.time == 0 and if there are no more space objects
+	if (game.time == 0 || game.spaceObjectArray.length === 0) {
 		clearInterval(game.timer_inter);
 		clearInterval(game.space_inter);
 		window.ctx.clearRect(0, 0, c.width, c.height);
 		if (game.level == 2){
 			for (var i = 0; i< 3; i++){
 				var str_high_score = "highscore" + i;
-				if (localStorage.getItem(str_high_score) === null){
+
+				if (parseInt(localStorage.getItem(str_high_score)) === game.score){
+					//If the score already exists, ignore it.
+					break;
+				}
+				else if (localStorage.getItem(str_high_score) === null){
+					//If the score is unique and there's an empty spot, put it in.
 					localStorage.setItem(str_high_score, game.score);
 					break;
 				}
 				else{
 					if (game.score > parseInt(localStorage.getItem(str_high_score))){
-						localStorage.setItem(str_high_score,game.score);
+						//If the score is greater than the score at the i-th position, sink the scores down
+						//To preserve the ranks.
+						sinkScoreDown(game.score, i , str_high_score);
+						break;
 					}
 					continue;
 				}
@@ -321,6 +333,19 @@ function animate(game) {
 	} else {
     	setTimeout(animate, 33, game);
     }
+}
+
+/*
+	Inserts a high score, pushing the ones before it down a rank.
+*/
+function sinkScoreDown(score, i, str_high_score){
+	if (i == 2 || localStorage.getItem(str_high_score) == null){
+		localStorage.setItem(str_high_score, score);
+		return;
+	}
+	sinkScoreDown(parseInt(localStorage.getItem(str_high_score)), i + 1, "highscore" + (i + 1));
+	localStorage.setItem(str_high_score,score);
+	return;
 }
 
 function NoCollision(ExistingHole, CreatedHole){
