@@ -160,7 +160,7 @@ function createHUD(game) {
 
 	// box
 	ctx.beginPath();
-	ctx.strokeStyle = "#ff00ff";
+	ctx.strokeStyle = "purple";
 	ctx.lineWidth = 2;
 	ctx.moveTo(0, 40);
 	ctx.lineTo(game.width, 40);
@@ -172,11 +172,11 @@ function createHUD(game) {
 	ctx.lineWidth = 2;
 	ctx.rect(600, 10, 50, 20);
 	if (650 >= game.mouse_x && game.mouse_x >= 600 && 30 >= game.mouse_y && game.mouse_y >= 10 ) {
-		ctx.fillStyle = "#ff00ff";
+		ctx.fillStyle = "purple";
 		ctx.strokeStyle = "white";
 		ctx.fill();
 	} else {
-		ctx.strokeStyle = "#ff00ff";
+		ctx.strokeStyle = "purple";
 	}
 	ctx.closePath();
 	ctx.stroke()
@@ -184,17 +184,16 @@ function createHUD(game) {
 	//pause text
 	ctx.lineWidth = 1;
 	ctx.font = "12px Arial";
-	ctx
 	ctx.strokeText("Pause", 608, 25);
 
 	//level
 	ctx.font = "16px Arial";
-	ctx.fillStyle = "#ff00ff";
+	ctx.fillStyle = "purple";
 	ctx.fillText("Level: " + game.level, 50, 25);
 
 	//score
 	ctx.font = "16px Arial";
-	ctx.fillStyle = "#ff00ff";
+	ctx.fillStyle = "#purple";
 	ctx.fillText("Score: " + game.score, 350, 25);
 
 	//timer
@@ -261,8 +260,6 @@ function spawnBlackHole(game){
 function animate(game) {
 	var c = document.getElementById("space-canvas");
 	window.ctx.clearRect(0, 0, c.width, c.height);
-	window.ctx.fillStyle = "#ffffff";
-	window.ctx.fillRect(0, 40, c.width, c.height);
 
 	createHUD(game);
 
