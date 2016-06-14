@@ -50,11 +50,16 @@ Black_Hole.prototype.pull = function(spaceobjects, game) {
             game.score -= 50;
 
             this.object_count += 1;
-            
-            if (this.object_count == this.capacity) {
-                var index = game.blackHoleArray.indexOf(this);
-                game.blackHoleArray.splice(index, 1);
-            }
+            var g = game;
+            var that = this;
+            setTimeout(function() {
+
+                if (that.object_count == that.capacity) {
+                    var index = g.blackHoleArray.indexOf(that);
+                    g.blackHoleArray.splice(index, 1);
+                }
+                
+            }, 0);
         }
     }
 };
