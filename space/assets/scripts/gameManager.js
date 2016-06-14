@@ -204,8 +204,8 @@ function createHUD(game) {
 function spawnSpaceObject() {
 	var temp = new SpaceObject(0,0,0);
 
-	var x_pos = Math.floor((Math.random()*900) + temp.width/2);
-	var y_pos = Math.floor((Math.random()*540) + 42 + temp.width/2);
+	var x_pos = Math.floor((Math.random()*800) + 100);
+	var y_pos = Math.floor((Math.random()*440) + 100);
 	var type = Math.floor((Math.random()*4));
 
 	return new SpaceObject(x_pos, y_pos, type);
