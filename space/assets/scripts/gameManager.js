@@ -261,6 +261,8 @@ function spawnBlackHole(game){
 function animate(game) {
 	var c = document.getElementById("space-canvas");
 	window.ctx.clearRect(0, 0, c.width, c.height);
+	window.ctx.fillStyle = "#ffffff";
+	window.ctx.fillRect(0, 40, c.width, c.height);
 
 	createHUD(game);
 
