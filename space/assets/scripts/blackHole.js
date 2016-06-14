@@ -25,12 +25,12 @@ var Black_Hole = function (x,y, color){ //Constructor for the black hole object
 
     // sets different pull speeds based on color selection
     if (this.color == 0) { //purple
-        this.pull_speed = 2;
+        this.pull_speed = 1.5;
         this.capacity = 2;
         this.img.src = "assets/images/portalpurple.svg";
 
-    } else if (this.color == 2) { // red
-        this.pull_speed = 3;
+    } else if (this.color == 2) { // black
+        this.pull_speed = 2;
         this.capacity = 1;
         this.img.src = "assets/images/portalblack.svg";
 
@@ -96,6 +96,9 @@ function calculateSpeed(blackhole, spaceobject) {
 function drawHole(hole){
     var canvas = document.getElementById("space-canvas");
     var context = canvas.getContext("2d");
+    hole.img.onload = function() {
+        ctx.drawImage(hole.img, hole.x-25, hole.y-25);
+    };
     ctx.drawImage(hole.img, hole.x-25, hole.y-25);
     // window.ctx.beginPath();
     // window.ctx.arc(hole.x,hole.y, 25, 0, 2* Math.PI, false);
