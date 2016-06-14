@@ -98,7 +98,7 @@ function checkHole(event,game,canvas){
 		return;
 	}
 	for (var i = 0; i < game.blackHoleArray.length; i++){
-		if (isClicked(game.blackHoleArray[i],game.mouse_x, game.mouse_y)){
+		if (isClicked(game.blackHoleArray[i],game.mouse_x, game.mouse_y) && game.state=="start"){
 			clearHole(game.blackHoleArray[i]);
 			switch(game.blackHoleArray[i].color){
 				case 0: //Colored purple.
