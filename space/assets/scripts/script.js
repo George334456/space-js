@@ -44,7 +44,7 @@ function loadLevel(level, score) {
 	var high_score_str = "<span id = \"highscore\"> High Scores: ";
 	for (var i = 0; i < 3; i++){
 		if (high_score[0] === null){
-			high_score_str += "No High Score Yet";
+			high_score_str += "0";
 			break;
 		}
 		if (high_score[i] === null)
