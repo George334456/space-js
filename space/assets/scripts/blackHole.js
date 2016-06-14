@@ -21,22 +21,29 @@ var Black_Hole = function (x,y, color){ //Constructor for the black hole object
     this.collide_right = x + 50;
     this.color = color;
     this.object_count = 0; // num of space objects it has destroyed
+    this.img = new Image(); // used to load up image once , not everytime it is drawn
 
     // sets different pull speeds based on color selection
     if (this.color == 0) { //purple
         this.pull_speed = 2;
         this.capacity = 2;
+        this.img.src = "assets/images/portalpurple.svg";
 
-    } else if (this.color == 2) { // red
+    } else if (this.color == 2) { // black
         this.pull_speed = 3;
         this.capacity = 1;
+        this.img.src = "assets/images/portalblack.svg";
 
     } else if (this.color == 1) { //blue
         this.pull_speed = 1;
         this.capacity = 3;
+        this.img.src = "assets/images/portalblue.svg";
     }
 }
 
+/*
+Pulls space objects into a black hole
+*/
 Black_Hole.prototype.pull = function(spaceobjects, game) {
     for (var i = 0; i < spaceobjects.length; i++) {
         var s = spaceobjects[i];
@@ -50,11 +57,16 @@ Black_Hole.prototype.pull = function(spaceobjects, game) {
             game.score -= 50;
 
             this.object_count += 1;
-            
-            if (this.object_count == this.capacity) {
-                var index = game.blackHoleArray.indexOf(this);
-                game.blackHoleArray.splice(index, 1);
-            }
+            var g = game;
+            var that = this;
+            setTimeout(function() {
+                //In case multiple objects go into that hole at the same time overflows.
+                if (that.object_count >= that.capacity) {
+                    var index = g.blackHoleArray.indexOf(that);
+                    g.blackHoleArray.splice(index, 1);
+                }
+                
+            }, 0);
         }
     }
 };
@@ -79,53 +91,11 @@ function calculateSpeed(blackhole, spaceobject) {
     spaceobject.speed_x = Math.cos(angle) * blackhole.pull_speed;
     spaceobject.speed_y = Math.sin(angle) * blackhole.pull_speed;
 
-   
-
-    //console.log(spaceobject.speed_x, spaceobject.speed_y);
 }
 
+//draws the hole based on the image.
 function drawHole(hole){
     var canvas = document.getElementById("space-canvas");
     var context = canvas.getContext("2d");
-    var img = new Image();
-    switch(hole.color){
-        case 0: window.ctx.fillStyle = "purple";
-            img.src = "assets/images/portalpurple.svg";
-            break;
-        case 1: window.ctx.fillStyle = "blue";
-            img.src = "assets/images/portalblue.svg";
-            break;
-        case 2: window.ctx.fillStyle = "red";
-            img.src = "assets/images/portalblack.svg";
-            break;
-    }
-    img.onload = function() {
-        ctx.drawImage(img, hole.x-25, hole.y-25);
-    }
-    // window.ctx.beginPath();
-    // window.ctx.arc(hole.x,hole.y, 25, 0, 2* Math.PI, false);
-    // window.ctx.fill();
-    //window.ctx.strokeStyle = "white";
-    //window.ctx.stroke();
-    window.ctx.fillStyle="black";
-    window.ctx.beginPath();
-    window.ctx.strokeRect(hole.click_left, hole.click_top,  50, 50);
-    window.ctx.beginPath();
-    window.ctx.strokeRect(hole.collide_left, hole.collide_top, 100,100);
-}
-
-function clearHole(hole){
-    var canvas = document.getElementById("space-canvas");
-    var context = canvas.getContext("2d");
-    window.ctx.fillStyle = "white";
-    window.ctx.beginPath();
-    window.ctx.arc(hole.x,hole.y, 25, 0, 2* Math.PI, false);
-    window.ctx.fill();
-    window.ctx.strokeStyle = "white";
-    window.ctx.stroke();
-    window.ctx.fillStyle="white";
-    window.ctx.beginPath();
-    window.ctx.strokeRect(hole.click_left, hole.click_top,  50, 50);
-    window.ctx.beginPath();
-    window.ctx.strokeRect(hole.collide_left, hole.collide_top, 100,100);
+    ctx.drawImage(hole.img, hole.x-25, hole.y-25);
 }
